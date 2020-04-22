@@ -40,6 +40,9 @@ import static org.mockito.Mockito.*;
  * Polling interval and directories are specified in the initialization of the class, and a poller will check
  * for changes and additions.
  *
+ * 此类用于groovy相关类动态加载
+ * 可以使用springboot 启动后的钩子加载
+ *
  * @author Mikey Cohen
  *         Date: 12/7/11
  *         Time: 12:09 PM

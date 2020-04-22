@@ -62,12 +62,12 @@ public class ZuulRunner {
 
     /**
      * sets HttpServlet request and HttpResponse
-     *
+     * 设置 请求和响应
      * @param servletRequest
      * @param servletResponse
      */
     public void init(HttpServletRequest servletRequest, HttpServletResponse servletResponse) {
-
+        // 主要就是把 request 和 resposne 放到 requestContext 的 ThreadLocal 变量里
         RequestContext ctx = RequestContext.getCurrentContext();
         if (bufferRequests) {
             ctx.setRequest(new HttpServletRequestWrapper(servletRequest));

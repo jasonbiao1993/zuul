@@ -54,9 +54,18 @@ public class FilterLoader {
 
     private static final Logger LOG = LoggerFactory.getLogger(FilterLoader.class);
 
+    // 通过 4 个 ConcurrentHashMap 来维护 filter 信息
+    // 维护 xxGrovvyZuulFilter.groovy filter 文件的最近修改时间; key 为 filter 文件名（绝对路径）, value 为文件最后修改时间
     private final ConcurrentHashMap<String, Long> filterClassLastModified = new ConcurrentHashMap<String, Long>();
+    // 目测实际上没有进行相关处理操作 （目测代码很少的路径会走到这）; key 为 filter 文件名, value 为 sourceCode
     private final ConcurrentHashMap<String, String> filterClassCode = new ConcurrentHashMap<String, String>();
+    /**
+     * 主要是用来检测 xxGrovvyZuulFilter 这样的 filter name 是否已经被注册 （目测代码很少的路径会走到这）; key 为 filter 文件名, value 也为文件名
+     */
     private final ConcurrentHashMap<String, String> filterCheck = new ConcurrentHashMap<String, String>();
+    /**
+     * 这个是最主要的，根据 filter 类型: "pre", "post", "route" 等来返回对于的 filter list
+     */
     private final ConcurrentHashMap<String, List<ZuulFilter>> hashFiltersByType = new ConcurrentHashMap<String, List<ZuulFilter>>();
 
     private FilterRegistry filterRegistry = FilterRegistry.instance();
@@ -187,6 +196,8 @@ public class FilterLoader {
                 list.add(filter);
             }
         }
+
+        // 排序，过滤器执行顺序
         Collections.sort(list); // sort by priority
 
         hashFiltersByType.putIfAbsent(filterType, list);

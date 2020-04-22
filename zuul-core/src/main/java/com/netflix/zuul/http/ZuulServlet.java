@@ -57,12 +57,14 @@ public class ZuulServlet extends HttpServlet {
         String bufferReqsStr = config.getInitParameter("buffer-requests");
         boolean bufferReqs = bufferReqsStr != null && bufferReqsStr.equals("true") ? true : false;
 
+        // 实际执行类
         zuulRunner = new ZuulRunner(bufferReqs);
     }
 
     @Override
     public void service(javax.servlet.ServletRequest servletRequest, javax.servlet.ServletResponse servletResponse) throws ServletException, IOException {
         try {
+            // 将 request, response 放到 requestContext hreadlocal
             init((HttpServletRequest) servletRequest, (HttpServletResponse) servletResponse);
 
             // Marks this request as having passed through the "Zuul engine", as opposed to servlets
@@ -94,6 +96,7 @@ public class ZuulServlet extends HttpServlet {
         } catch (Throwable e) {
             error(new ZuulException(e, 500, "UNHANDLED_EXCEPTION_" + e.getClass().getName()));
         } finally {
+            // 清楚TheradLocal
             RequestContext.getCurrentContext().unset();
         }
     }
@@ -118,7 +121,7 @@ public class ZuulServlet extends HttpServlet {
 
     /**
      * executes "pre" filters
-     *
+     * zuulRunner 通过 FilterProcessor 来执行相应类型的 filter
      * @throws ZuulException
      */
     void preRoute() throws ZuulException {

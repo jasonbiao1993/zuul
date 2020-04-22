@@ -98,7 +98,7 @@ public class RequestContext extends ConcurrentHashMap<String, Object> {
 
     /**
      * Get the current RequestContext
-     *
+     * threadlocal 相关的设置
      * @return the current RequestContext
      */
     public static RequestContext getCurrentContext() {
